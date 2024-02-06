@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mitch_koko_authentication/page/first_screen.dart';
 import 'package:mitch_koko_authentication/page/home_page.dart';
+import 'package:mitch_koko_authentication/page/login_or_rigister.dart';
 
 class Authpage extends StatelessWidget {
   const Authpage({super.key});
@@ -18,7 +18,7 @@ if(snapshot.hasData){
 }
           //user not login 
 else{
-  return Firstscreen() ;
+  return LoginOrRegister() ;
 }
 
         },

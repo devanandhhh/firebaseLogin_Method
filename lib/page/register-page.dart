@@ -3,22 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:mitch_koko_authentication/components/my_button.dart';
 import 'package:mitch_koko_authentication/components/my_textfield.dart';
 
-class Firstscreen extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  Firstscreen({super.key,required this.onTap});
+  RegisterPage({super.key,required this.onTap});
 
   @override
-  State<Firstscreen> createState() => _FirstscreenState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _FirstscreenState extends State<Firstscreen> {
+class _RegisterPageState extends State<RegisterPage> {
 //text editing controller
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
-// Sign User in  method
-  void siginUserIn() async {
+  final confirmPasswordController=TextEditingController();
+
+// Sign User Up  method
+  void siginUserUp() async {
     //show loading circle
     showDialog(
       context: context,
@@ -28,10 +30,16 @@ class _FirstscreenState extends State<Firstscreen> {
         );
       },
     );
-    //for signin
+    // try creating the user
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //check if password is correct or not
+      if(passwordController.text==confirmPasswordController.text){
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
+      }else{
+        //show the error message
+        errorMessage(context,'passwords dont match');
+      }
       //pop the loading circle
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -73,7 +81,7 @@ class _FirstscreenState extends State<Firstscreen> {
                     height: 50,
                   ),
                   Text(
-                    'Welcome back,You\'ve been Missed!',
+                    'Lets Create a Account for Youh!',
                     style: TextStyle(color: Colors.grey[700], fontSize: 16),
                   ),
                   SizedBox(
@@ -97,7 +105,15 @@ class _FirstscreenState extends State<Firstscreen> {
                   SizedBox(
                     height: 25,
                   ),
-                  MyButton(onTap: siginUserIn,text:  'Sign In',),
+                   MyTextfield(
+                    controller: confirmPasswordController,
+                    hinttext: 'Confirm Password',
+                    obscureText: true,
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  MyButton(onTap: siginUserUp,text: 'Sign Up',),
                   SizedBox(
                     height: 25,
                   ),
@@ -131,7 +147,7 @@ class _FirstscreenState extends State<Firstscreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Not a member?',
+                        'Already have an account ?',
                         style: TextStyle(color: Colors.grey[700]),
                       ),
                       const SizedBox(
@@ -140,7 +156,7 @@ class _FirstscreenState extends State<Firstscreen> {
                       GestureDetector(
                         onTap: widget.onTap,
                         child: const Text(
-                          'Register Now',
+                          'Login now',
                           style: TextStyle(
                               color: Colors.blue, fontWeight: FontWeight.bold),
                         ),
